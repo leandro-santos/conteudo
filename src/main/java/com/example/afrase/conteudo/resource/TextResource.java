@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,9 +29,13 @@ public class TextResource {
         return text;
     }
 
+    private Collection<Text> buscaTextos(){
+        return texts.values();
+    }
+
     @RequestMapping(method= RequestMethod.GET, value="/texts")
     public void buscar() {
-        System.out.println("chamou!");
+        return new ResponseEntity<Text>
     }
 
     @RequestMapping(method= RequestMethod.POST, value="/texts", consumes= MediaType.APPLICATION_JSON_VALUE)
