@@ -1,13 +1,12 @@
 package com.example.afrase.conteudo.resource;
 
 import com.example.afrase.conteudo.model.Text;
+import com.example.afrase.conteudo.service.TextService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,33 +15,34 @@ import java.util.Map;
 @RestController
 public class TextResource {
 
-    Map<Integer, Text> texts;
-    public Integer proximoId=1;
+    @Autowired
+    TextService textoService;
 
-    private Text cadastrar(Text text){
-        if (texts == null) {
-            texts = new HashMap<>();
-        }
-        text.setId(proximoId);
-        proximoId++;
-        texts.put(text.getId(), text);
-        return text;
+    @RequestMapping(method= RequestMethod.GET, value="/textos")
+    public ResponseEntity<Collection<Text>> buscarTodosTextos() {
+        Collection<Text> textos = textoService.buscaTextos();
+        return new ResponseEntity<Collection<Text>>(textos, HttpStatus.OK);
     }
 
-    private Collection<Text> buscaTextos(){
-        return texts.values();
-    }
-
-    @RequestMapping(method= RequestMethod.GET, value="/texts")
-    public void buscar() {
-        return new ResponseEntity<Text>
-    }
-
-    @RequestMapping(method= RequestMethod.POST, value="/texts", consumes= MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method= RequestMethod.POST, value="/textos", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Text> cadastrarText(@RequestBody Text text){
-        Text textCadastrado = cadastrar(text);
-        System.out.println("chamou text post");
-        System.out.println(textCadastrado);
+        Text textCadastrado = textoService.cadastrar(text);
         return new ResponseEntity<Text>(textCadastrado, HttpStatus.CREATED);
+    }
+
+    @RequestMapping(method= RequestMethod.DELETE, value="/textos/{id}")
+    public ResponseEntity<Text> excluirTexto(@PathVariable Integer id){
+        Text texto = textoService.buscaTextoId(id).get();
+        if (texto == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        textoService.excluir(texto);
+        return new ResponseEntity<>(texto, HttpStatus.OK);
+    }
+
+    @RequestMapping(method= RequestMethod.PUT, value="/textos")
+    public ResponseEntity<Text> alterarTextos(@RequestBody Text texto){
+        Text textoAlterado = textoService.alterar(texto);
+        return new ResponseEntity<>(textoAlterado, HttpStatus.OK);
     }
 }

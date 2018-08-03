@@ -1,9 +1,15 @@
 package com.example.afrase.conteudo.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Date;
 
+@Entity
 public class Text {
 
+    @Id
+    @GeneratedValue
     private Integer id;
     private String description;
     private String site;
