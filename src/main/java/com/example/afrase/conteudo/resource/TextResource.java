@@ -18,6 +18,7 @@ public class TextResource {
     @Autowired
     TextService textoService;
 
+    @CrossOrigin
     @RequestMapping(method= RequestMethod.GET, value="/textos")
     public ResponseEntity<Collection<Text>> buscarTodosTextos() {
         Collection<Text> textos = textoService.buscaTextos();

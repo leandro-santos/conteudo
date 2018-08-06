@@ -16,6 +16,18 @@ public class Text {
     private Date update_at;
     private Date create_at;
 
+    public Text() {
+        this.create_at = new Date();
+        this.update_at = new Date();
+    }
+
+    public Text(String description, String site) {
+        this.description = description;
+        this.site = site;
+        this.update_at = new Date();
+        this.create_at = new Date();
+    }
+
     public Integer getId() {
         return id;
     }
