@@ -9,14 +9,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class TextResource {
 
+    final TextService textoService;
+
     @Autowired
-    TextService textoService;
+    public TextResource(TextService textoService) {
+        this.textoService = textoService;
+    }
 
     @CrossOrigin
     @RequestMapping(method= RequestMethod.GET, value="/textos")
@@ -25,22 +28,26 @@ public class TextResource {
         return new ResponseEntity<Collection<Text>>(textos, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @RequestMapping(method= RequestMethod.POST, value="/textos", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Text> cadastrarText(@RequestBody Text text){
         Text textCadastrado = textoService.cadastrar(text);
         return new ResponseEntity<Text>(textCadastrado, HttpStatus.CREATED);
     }
 
+    @CrossOrigin
     @RequestMapping(method= RequestMethod.DELETE, value="/textos/{id}")
     public ResponseEntity<Text> excluirTexto(@PathVariable Integer id){
-        Text texto = textoService.buscaTextoId(id).get();
-        if (texto == null) {
+        Optional<Text> optionalText = textoService.buscaTextoId(id);
+        if (!optionalText.isPresent()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        Text texto = optionalText.get();
         textoService.excluir(texto);
         return new ResponseEntity<>(texto, HttpStatus.OK);
     }
 
+    @CrossOrigin
     @RequestMapping(method= RequestMethod.PUT, value="/textos")
     public ResponseEntity<Text> alterarTextos(@RequestBody Text texto){
         Text textoAlterado = textoService.alterar(texto);

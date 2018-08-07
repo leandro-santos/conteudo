@@ -21,11 +21,11 @@ public class Text {
         this.update_at = new Date();
     }
 
-    public Text(String description, String site) {
+    public Text(String description, String site, Date create_at) {
         this.description = description;
         this.site = site;
         this.update_at = new Date();
-        this.create_at = new Date();
+        this.create_at = create_at;
     }
 
     public Integer getId() {
