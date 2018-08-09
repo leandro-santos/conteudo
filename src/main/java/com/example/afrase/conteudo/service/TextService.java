@@ -11,8 +11,7 @@ import java.util.Optional;
 @Service
 public class TextService {
 
-    final
-    TextRepository textoRepository;
+    final TextRepository textoRepository;
 
     @Autowired
     public TextService(TextRepository textoRepository) {
@@ -21,6 +20,7 @@ public class TextService {
 
 
     public Text cadastrar(Text texto){
+        System.out.println(texto);
         return textoRepository.save(texto);
     }
 
